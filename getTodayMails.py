@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-
+from getMailBody import getMailBody
 def get_today_emails(service):
     # Get today's date in RFC 3339 format
     yesterday = datetime.now() - timedelta(days=1)
@@ -19,5 +19,7 @@ def get_today_emails(service):
         print('Today\'s Emails:')
         for email in emails:
             email_data = service.users().messages().get(userId='me', id=email['id']).execute()
-            print(email_data['snippet'])
+            payload = email_data['payload']
+            body = getMailBody(payload)
+            print(body)
 
