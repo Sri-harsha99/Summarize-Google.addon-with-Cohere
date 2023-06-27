@@ -5,6 +5,7 @@ import google.auth.transport.requests
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from getTodayMails import get_today_emails
+from cohereAPI import classifyData, summarizeData, generateData
 # Scopes required for accessing Gmail API
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
@@ -38,17 +39,37 @@ def authenticate():
 # Example usage
 def main():
     service = authenticate()
-    get_today_emails(service)
-    # Now you can use the service to make API requests
-    # results = service.users().labels().list(userId='me').execute()
-    # labels = results.get('labels', [])
+    emailData = get_today_emails(service)
 
-    # if not labels:
-    #     print('No labels found.')
-    # else:
-    #     print('Labels:')
-    #     for label in labels:
-    #         print(label['name'])
+    generateData('How is Deep learning different from Machine Learning?')
+
+    response = classifyData(emailData)
+
+    with open('response.txt', 'w') as file:
+    # Write each index to a new line in the file
+        for index in emailData:
+            file.write(str(index) + '\n')
+    
+    ham_indexes = []
+    for index, classification in enumerate(response):
+        if classification.prediction == 'ham':
+            ham_indexes.append(index)
+    with open('ham_indexes.txt', 'w') as file:
+    # Write each index to a new line in the file
+        for index in ham_indexes:
+            file.write(str(index) + '\n')
+    print(ham_indexes)
+
+
+    results = service.users().labels().list(userId='me').execute()
+    labels = results.get('labels', [])
+
+    if not labels:
+        print('No labels found.')
+    else:
+        print('Labels:')
+        for label in labels:
+            print(label['name'])
 
 if __name__ == '__main__':
     main()

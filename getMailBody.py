@@ -11,12 +11,5 @@ def getMailBody(payload):
                     decoded_body = base64.urlsafe_b64decode(body_content).decode('utf-8')
                     return decoded_body
 
-    # If no plain text part is found, check the main body
-    if 'body' in payload:
-        body_content = payload['body'].get('data')
-        if body_content:
-            decoded_body = base64.urlsafe_b64decode(body_content).decode('utf-8')
-            return decoded_body
-
     # If no plain text body is found, return None or handle accordingly
     return None
