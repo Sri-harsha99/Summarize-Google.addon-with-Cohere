@@ -1,4 +1,4 @@
-# Summarize - a Gmail add-on
+# Summarize - a Google workspace add-on
 
 This project aims to develop an add-on for gmail that could do the following things.
 
